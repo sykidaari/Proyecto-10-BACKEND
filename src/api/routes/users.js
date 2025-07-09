@@ -16,3 +16,5 @@ usersRouter.get('/:id', [isAuth], getUserById);
 
 usersRouter.post('/register', [upload.single('img')], registerUser);
 usersRouter.post('/login', loginUser);
+
+module.exports = usersRouter;
