@@ -1,5 +1,8 @@
+const Event = require('../models/event');
+
 const getEvents = async (req, res) => {
   try {
+    const events = await Event.find();
   } catch (error) {}
 };
 
