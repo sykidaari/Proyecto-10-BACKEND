@@ -17,4 +17,8 @@ usersRouter.get('/:id', [isAuth], getUserById);
 usersRouter.post('/register', [upload.single('img')], registerUser);
 usersRouter.post('/login', loginUser);
 
+usersRouter.put('/:id', [isAuth, upload.single('img')], updateUser);
+
+usersRouter.delete('/:id', [isAuth], deleteUser);
+
 module.exports = usersRouter;

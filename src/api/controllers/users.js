@@ -1,6 +1,8 @@
 const { generateToken } = require('../../config/jwt');
+const deleteCloudinaryImg = require('../../utils/cldImageDeleter');
 const handleControllerError = require('../../utils/errorHandlers');
 const User = require('../models/user');
+const bcrypt = require('bcrypt');
 
 const getUsers = async (req, res) => {
   try {
@@ -47,18 +49,18 @@ const getUserById = async (req, res) => {
 
 const registerUser = async (req, res) => {
   try {
-    const { username, email_address, password } = req.body;
+    const { userName, emailAddress, password } = req.body;
 
     const newUser = new User({
-      username,
-      email_address,
+      userName,
+      emailAddress,
       password,
       role: 'user',
       img: req.file?.path
     });
 
     const duplicateUser = await User.findOne({
-      $or: [{ username }, { email_address }]
+      $or: [{ userName }, { emailAddress }]
     });
 
     if (duplicateUser) {
@@ -75,7 +77,7 @@ const registerUser = async (req, res) => {
     const token = generateToken(userSaved._id);
 
     return res.status(201).json({
-      message: 'user registered succesfully',
+      message: 'user registered successfully',
       user: userSaved,
       token
     });
@@ -92,17 +94,128 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-  } catch (error) {}
+    const { userName, emailAddress, password } = req.body;
+
+    const user = await User.findOne({ $or: [{ userName }, { emailAddress }] });
+
+    if (!user) {
+      return handleControllerError({
+        res,
+        error: new Error("user doesn't exist"),
+        reqType: 'POST',
+        controllerName: 'loginUser',
+        action: 'check if user exists in DB'
+      });
+    }
+
+    if (bcrypt.compareSync(password, user.password)) {
+      const token = generateToken(user._id);
+      return res
+        .status(200)
+        .json({ message: 'user logged in successfully', user, token });
+    } else {
+      return handleControllerError({
+        res,
+        error: new Error('the password is incorrect'),
+        reqType: 'POST',
+        controllerName: 'loginUser',
+        action: 'check password'
+      });
+    }
+  } catch (error) {
+    handleControllerError({
+      res,
+      error,
+      reqType: 'POST',
+      controllerName: 'loginUser',
+      action: 'login user'
+    });
+  }
 };
 
 const updateUser = async (req, res) => {
   try {
-  } catch (error) {}
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return handleControllerError({
+        res,
+        error: new Error('user does not exist in DB'),
+        reqType: 'PUT',
+        controllerName: 'updateUser',
+        action: 'check if user exists in DB'
+      });
+    }
+
+    if (req.user.role !== 'admin') {
+      delete req.body.role;
+    }
+
+    if (req.file) {
+      deleteCloudinaryImg(user.img);
+      req.body.img = req.file.path;
+    }
+
+    if (req.body.password) {
+      req.body.password = bcrypt.hashSync(req.body.password, 10);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true
+    });
+
+    return res
+      .status(200)
+      .json({ message: 'user updated successfully', user: updatedUser });
+  } catch (error) {
+    handleControllerError({
+      res,
+      error,
+      reqType: 'PUT',
+      controllerName: 'updateUser',
+      action: 'update existing user'
+    });
+  }
 };
 
 const deleteUser = async (req, res) => {
   try {
-  } catch (error) {}
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return handleControllerError({
+        res,
+        error: new Error('user does not exist in DB'),
+        reqType: 'DELETE',
+        controllerName: 'deleteUser',
+        action: 'check if user exists in DB'
+      });
+    }
+
+    const deletedUser = await User.findByIdAndDelete(id);
+
+    if (deletedUser.img) {
+      deleteCloudinaryImg(deletedUser.img);
+    }
+
+    return res.status(200).json({
+      message: 'user deleted successfully',
+      user: deletedUser
+    });
+  } catch (error) {
+    handleControllerError({
+      res,
+      error,
+      reqType: 'DELETE',
+      controllerName: 'deleteUser',
+      action: 'delete user in DB'
+    });
+  }
 };
 
 module.exports = {

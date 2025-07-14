@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const requiredString = require('../../utils/modelsUtils');
+const Event = require('./event');
+const deleteCloudinaryImg = require('../../utils/cldImageDeleter');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema(
   {
@@ -28,8 +31,29 @@ const userSchema = new mongoose.Schema(
 
     img: { type: String, trim: true }
   },
-  { timestamps: true, collection: true }
+  { timestamps: true, collection: 'users' }
 );
+
+userSchema.post('findOneAndDelete', async function (user) {
+  if (user) {
+    await Event.updateMany(
+      { attendants: user._id },
+      { $pull: { attendants: user._id } }
+    );
+
+    const userEvents = await Event.find({ creator: user._id });
+
+    for (const event of userEvents) {
+      if (event.imgs && event.imgs.length > 0) {
+        for (const img of event.imgs) {
+          deleteCloudinaryImg(img);
+        }
+      }
+    }
+
+    await Event.deleteMany({ creator: user._id });
+  }
+});
 
 userSchema.pre('save', function () {
   this.password = bcrypt.hashSync(this.password, 10);
