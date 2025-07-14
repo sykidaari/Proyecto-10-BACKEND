@@ -1,2 +1,4 @@
 node_modules
 idea.excalidraw
+.env
+testUsers.md
