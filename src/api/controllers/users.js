@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const getUsers = async (req, res) => {
   try {
     const users = await User.find();
+
     return res.status(200).json(users);
   } catch (error) {
     handleControllerError({
@@ -64,6 +65,8 @@ const registerUser = async (req, res) => {
     });
 
     if (duplicateUser) {
+      if (req.file?.path) deleteCloudinaryImg(req.file.path);
+
       return handleControllerError({
         res,
         error: new Error('Register failed, username or email already exists'),
@@ -136,6 +139,7 @@ const loginUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
+    const { userName, emailAddress, password } = req.body;
 
     const user = await User.findById(id);
 
@@ -149,6 +153,23 @@ const updateUser = async (req, res) => {
       });
     }
 
+    const duplicateUser = await User.findOne({
+      $or: [{ userName }, { emailAddress }],
+      _id: { $ne: id }
+    });
+
+    if (duplicateUser) {
+      if (req.file?.path) deleteCloudinaryImg(req.file.path);
+
+      return handleControllerError({
+        res,
+        error: new Error('Update failed, username or email already in use'),
+        reqType: 'PUT',
+        controllerName: 'updateUser',
+        action: 'check for duplicates before update'
+      });
+    }
+
     if (req.user.role !== 'admin') {
       delete req.body.role;
     }
@@ -158,7 +179,7 @@ const updateUser = async (req, res) => {
       req.body.img = req.file.path;
     }
 
-    if (req.body.password) {
+    if (password) {
       req.body.password = bcrypt.hashSync(req.body.password, 10);
     }
 
