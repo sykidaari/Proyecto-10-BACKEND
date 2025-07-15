@@ -20,6 +20,22 @@ const eventSchema = new mongoose.Schema(
     },
     description: { ...requiredString, minlength: 10, maxlength: 2000 },
 
+    category: {
+      type: String,
+      enum: [
+        'music',
+        'sports',
+        'art',
+        'education',
+        'community',
+        'food',
+        'nightlife',
+        'business',
+        'wellness',
+        'family'
+      ]
+    },
+
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
@@ -32,7 +48,7 @@ const eventSchema = new mongoose.Schema(
         required: true
       }
     ],
-    imgs: [{ type: String, trim: true }]
+    img: { type: String, trim: true }
   },
   { timestamps: true, collection: 'events' }
 );
