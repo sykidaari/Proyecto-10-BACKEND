@@ -1,3 +1,4 @@
+const deleteCloudinaryImg = require('../../utils/cldImageDeleter');
 const handleControllerError = require('../../utils/errorHandlers');
 const Event = require('../models/event');
 
@@ -13,7 +14,7 @@ const getEvents = async (req, res) => {
       .sort({
         date: sortOrder
       })
-      .populate('user');
+      .populate(['creator', 'attendants']);
 
     return res.status(200).json(events);
   } catch (error) {
@@ -31,7 +32,7 @@ const getEventById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const event = await Event.findById(id);
+    const event = await Event.findById(id).populate(['creator', 'attendants']);
 
     if (!event) {
       return handleControllerError({
@@ -59,11 +60,11 @@ const getEventsByCreator = async (req, res) => {
   try {
     const { creatorId } = req.params;
 
-    const events = await Event.find({ createdBy: creatorId })
+    const events = await Event.find({ creator: creatorId })
       .sort({
         date: -1
       })
-      .populate('user');
+      .populate(['creator', 'attendants']);
 
     return res.status(200).json(events);
   } catch (error) {
@@ -83,7 +84,7 @@ const createEvent = async (req, res) => {
 
     const savedEvent = await newEvent.save();
 
-    const populatedEvent = await savedEvent.populate('user');
+    const populatedEvent = await savedEvent.populate(['creator', 'attendants']);
 
     return res.status(201).json({
       message: 'event created successfully',
@@ -117,14 +118,30 @@ const updateEvent = async (req, res) => {
     }
 
     if (req.file) {
-      deleteCloudinaryImg(event.img);
+      if (event.img) {
+        deleteCloudinaryImg(event.img);
+      }
       req.body.img = req.file.path;
     }
 
-    const updatedEvent = await Event.findByIdAndUpdate(id, req.body, {
+    const updateFields = { ...req.body };
+
+    let attendants = req.body.attendants;
+    if (attendants && !Array.isArray(attendants)) {
+      attendants = [attendants];
+    }
+
+    if (Array.isArray(attendants)) {
+      updateFields.$addToSet = {
+        attendants: { $each: attendants }
+      };
+      delete updateFields.attendants;
+    }
+
+    const updatedEvent = await Event.findByIdAndUpdate(id, updateFields, {
       new: true,
       runValidators: true
-    });
+    }).populate(['creator', 'attendants']);
 
     return res
       .status(200)

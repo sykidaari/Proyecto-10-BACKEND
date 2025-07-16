@@ -13,12 +13,12 @@ const eventsRouter = require('express').Router();
 
 eventsRouter.get('/', getEvents);
 eventsRouter.get('/:id', getEventById);
-eventsRouter.get('user/:creatorId', [isAuth], getEventsByCreator);
+eventsRouter.get('/creator/:creatorId', [isAuth], getEventsByCreator);
 
 eventsRouter.post('/', [isAuth, upload.single('img')], createEvent);
 
-eventsRouter.put('/:', [isAuth, upload.single('img')], updateEvent);
+eventsRouter.put('/:id', [isAuth, upload.single('img')], updateEvent);
 
-eventsRouter.delete('/id', [isAuth], deleteEvent);
+eventsRouter.delete('/:id', [isAuth], deleteEvent);
 
 module.exports = eventsRouter;

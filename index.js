@@ -3,6 +3,7 @@ const express = require('express');
 const cloudinary = require('cloudinary');
 const connectDB = require('./src/config/db');
 const mainRouter = require('./src/api/routes');
+const cors = require('cors');
 
 const app = express();
 
@@ -13,6 +14,8 @@ cloudinary.config({
 });
 
 app.use(express.json());
+
+app.use(cors());
 
 connectDB();
 

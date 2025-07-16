@@ -175,7 +175,9 @@ const updateUser = async (req, res) => {
     }
 
     if (req.file) {
-      deleteCloudinaryImg(user.img);
+      if (user.img) {
+        deleteCloudinaryImg(user.img);
+      }
       req.body.img = req.file.path;
     }
 
