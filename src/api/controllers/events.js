@@ -21,7 +21,7 @@ const getEvents = async (req, res) => {
     handleControllerError({
       res,
       error,
-      reqType: 'GET',
+      method: 'GET',
       controllerName: 'getEvents',
       action: 'fetch events from DB'
     });
@@ -38,7 +38,7 @@ const getEventById = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('event not found'),
-        reqType: 'GET',
+        method: 'GET',
         controllerName: 'getEventById',
         action: 'check if event exists in DB'
       });
@@ -49,7 +49,7 @@ const getEventById = async (req, res) => {
     handleControllerError({
       res,
       error,
-      reqType: 'GET',
+      method: 'GET',
       controllerName: 'getEventById',
       action: 'fetch event with _id from DB'
     });
@@ -71,7 +71,7 @@ const getEventsByCreator = async (req, res) => {
     handleControllerError({
       res,
       error,
-      reqType: 'GET',
+      method: 'GET',
       controllerName: 'getEventsByCreator',
       action: 'fetch events with creator from DB'
     });
@@ -94,7 +94,7 @@ const createEvent = async (req, res) => {
     handleControllerError({
       res,
       error,
-      reqType: 'POST',
+      method: 'POST',
       controllerName: 'createEvent',
       action: 'upload new event to DB'
     });
@@ -111,7 +111,7 @@ const updateEvent = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('event does not exist in DB'),
-        reqType: 'PUT',
+        method: 'PUT',
         controllerName: 'updateEvent',
         action: 'check if event exists in DB'
       });
@@ -150,7 +150,7 @@ const updateEvent = async (req, res) => {
     handleControllerError({
       res,
       error,
-      reqType: 'PUT',
+      method: 'PUT',
       controllerName: 'updateEvent',
       action: 'update existing event'
     });
@@ -167,7 +167,7 @@ const deleteEvent = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('event does not exist in DB'),
-        reqType: 'DELETE',
+        method: 'DELETE',
         controllerName: 'deleteEvent',
         action: 'check if event exists in DB'
       });
@@ -187,7 +187,7 @@ const deleteEvent = async (req, res) => {
     handleControllerError({
       res,
       error,
-      reqType: 'DELETE',
+      method: 'DELETE',
       controllerName: 'deleteEvent',
       action: 'delete event in DB'
     });

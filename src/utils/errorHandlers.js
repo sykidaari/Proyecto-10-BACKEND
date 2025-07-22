@@ -2,13 +2,13 @@ const handleControllerError = ({
   res,
   error,
   status = 400,
-  reqType = 'Request',
+  method = 'Request',
   controllerName = 'Not specified',
   action = 'Not specified'
 }) => {
   return res.status(status).json({
     error: {
-      type: `${reqType} failed`,
+      type: `${method} failed`,
       controller: controllerName,
       action: action,
       message: error.message

@@ -13,7 +13,7 @@ const getUsers = async (req, res) => {
     handleControllerError({
       res,
       error,
-      reqType: 'GET',
+      method: 'GET',
       controllerName: 'getUsers',
       action: 'fetch users from DB'
     });
@@ -30,7 +30,7 @@ const getUserById = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('user not found'),
-        reqType: 'GET',
+        method: 'GET',
         controllerName: 'getUserById',
         action: 'check if user exists in DB'
       });
@@ -41,7 +41,7 @@ const getUserById = async (req, res) => {
     handleControllerError({
       res,
       error,
-      reqType: 'GET',
+      method: 'GET',
       controllerName: 'getUserById',
       action: 'fetch user with _id from DB'
     });
@@ -70,7 +70,7 @@ const registerUser = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('Register failed, username or email already exists'),
-        reqType: 'POST',
+        method: 'POST',
         controllerName: 'registerUser',
         action: 'check if user exists in DB'
       });
@@ -88,7 +88,7 @@ const registerUser = async (req, res) => {
     handleControllerError({
       res,
       error,
-      reqType: 'POST',
+      method: 'POST',
       controllerName: 'registerUser',
       action: 'register new user'
     });
@@ -105,7 +105,7 @@ const loginUser = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error("user doesn't exist"),
-        reqType: 'POST',
+        method: 'POST',
         controllerName: 'loginUser',
         action: 'check if user exists in DB'
       });
@@ -120,7 +120,7 @@ const loginUser = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('the password is incorrect'),
-        reqType: 'POST',
+        method: 'POST',
         controllerName: 'loginUser',
         action: 'check password'
       });
@@ -129,7 +129,7 @@ const loginUser = async (req, res) => {
     handleControllerError({
       res,
       error,
-      reqType: 'POST',
+      method: 'POST',
       controllerName: 'loginUser',
       action: 'login user'
     });
@@ -147,7 +147,7 @@ const updateUser = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('user does not exist in DB'),
-        reqType: 'PUT',
+        method: 'PUT',
         controllerName: 'updateUser',
         action: 'check if user exists in DB'
       });
@@ -164,7 +164,7 @@ const updateUser = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('Update failed, username or email already in use'),
-        reqType: 'PUT',
+        method: 'PUT',
         controllerName: 'updateUser',
         action: 'check for duplicates before update'
       });
@@ -197,7 +197,7 @@ const updateUser = async (req, res) => {
     handleControllerError({
       res,
       error,
-      reqType: 'PUT',
+      method: 'PUT',
       controllerName: 'updateUser',
       action: 'update existing user'
     });
@@ -214,7 +214,7 @@ const deleteUser = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('user does not exist in DB'),
-        reqType: 'DELETE',
+        method: 'DELETE',
         controllerName: 'deleteUser',
         action: 'check if user exists in DB'
       });
@@ -234,7 +234,7 @@ const deleteUser = async (req, res) => {
     handleControllerError({
       res,
       error,
-      reqType: 'DELETE',
+      method: 'DELETE',
       controllerName: 'deleteUser',
       action: 'delete user in DB'
     });
