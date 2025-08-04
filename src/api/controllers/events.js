@@ -4,11 +4,11 @@ const Event = require('../models/event');
 
 const getEvents = async (req, res) => {
   try {
-    const { category, order = 'desc' } = req.query;
+    const { category, order } = req.query;
 
     const filter = category ? { category } : {};
 
-    const sortOrder = order === 'asc' ? 1 : -1;
+    const sortOrder = !order || order === 'asc' ? 1 : -1;
 
     const events = await Event.find(filter)
       .sort({
@@ -62,7 +62,7 @@ const getEventsByCreator = async (req, res) => {
 
     const events = await Event.find({ creator: creatorId })
       .sort({
-        date: -1
+        date: 1
       })
       .populate(['creator', 'attendants']);
 

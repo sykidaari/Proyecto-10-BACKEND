@@ -44,10 +44,8 @@ userSchema.post('findOneAndDelete', async function (user) {
     const userEvents = await Event.find({ creator: user._id });
 
     for (const event of userEvents) {
-      if (event.imgs && event.imgs.length > 0) {
-        for (const img of event.imgs) {
-          deleteCloudinaryImg(img);
-        }
+      if (event.img) {
+        deleteCloudinaryImg(event.img);
       }
     }
 
