@@ -10,7 +10,10 @@ const userSchema = new mongoose.Schema(
       ...requiredString,
       unique: true,
       lowercase: true,
-      match: /^(?![.])[a-z0-9._]+$/,
+      match: [
+        /^(?![.])[a-z0-9._]+$/,
+        'Invalid username format. Username can include lowercase letters, digits, dots and underscores. Username cannot start with a dot. Examples: user_1 john.doe abc123 a_b.c'
+      ],
       minlength: 3,
       maxlength: 30
     },
