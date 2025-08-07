@@ -31,6 +31,7 @@ const getUserById = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('user not found'),
+        status: 404,
         method: 'GET',
         controllerName: 'getUserById',
         action: 'check if user exists in DB'
@@ -72,6 +73,7 @@ const registerUser = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('Register failed, username or email already exists'),
+        status: 409,
         method: 'POST',
         controllerName: 'registerUser',
         action: 'check if user exists in DB'
@@ -108,6 +110,7 @@ const loginUser = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error("Sorry! This user doesn't exist."),
+        status: 404,
         method: 'POST',
         controllerName: 'loginUser',
         action: 'check if user exists in DB'
@@ -123,6 +126,7 @@ const loginUser = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('The username/email or password is incorrect.'),
+        status: 401,
         method: 'POST',
         controllerName: 'loginUser',
         action: 'check password'
@@ -151,6 +155,7 @@ const updateUser = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('user does not exist in DB'),
+        status: 404,
         method: 'PUT',
         controllerName: 'updateUser',
         action: 'check if user exists in DB'
@@ -168,6 +173,7 @@ const updateUser = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('Update failed, username or email already in use'),
+        status: 409,
         method: 'PUT',
         controllerName: 'updateUser',
         action: 'check for duplicates before update'
@@ -219,6 +225,7 @@ const deleteUser = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('user does not exist in DB'),
+        status: 404,
         method: 'DELETE',
         controllerName: 'deleteUser',
         action: 'check if user exists in DB'

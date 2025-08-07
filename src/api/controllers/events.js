@@ -39,6 +39,7 @@ const getEventById = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('event not found'),
+        status: 404,
         method: 'GET',
         controllerName: 'getEventById',
         action: 'check if event exists in DB'
@@ -115,6 +116,7 @@ const updateEvent = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('event does not exist in DB'),
+        status: 404,
         method: 'PUT',
         controllerName: 'updateEvent',
         action: 'check if event exists in DB'
@@ -172,6 +174,7 @@ const deleteEvent = async (req, res) => {
       return handleControllerError({
         res,
         error: new Error('event does not exist in DB'),
+        status: 404,
         method: 'DELETE',
         controllerName: 'deleteEvent',
         action: 'check if event exists in DB'
