@@ -13,6 +13,7 @@ const getUsers = async (req, res) => {
     handleControllerError({
       res,
       error,
+      status: 500,
       method: 'GET',
       controllerName: 'getUsers',
       action: 'fetch users from DB'
@@ -41,6 +42,7 @@ const getUserById = async (req, res) => {
     handleControllerError({
       res,
       error,
+      status: 500,
       method: 'GET',
       controllerName: 'getUserById',
       action: 'fetch user with _id from DB'
@@ -88,6 +90,7 @@ const registerUser = async (req, res) => {
     handleControllerError({
       res,
       error,
+      status: 500,
       method: 'POST',
       controllerName: 'registerUser',
       action: 'register new user'
@@ -104,7 +107,7 @@ const loginUser = async (req, res) => {
     if (!user) {
       return handleControllerError({
         res,
-        error: new Error("user doesn't exist"),
+        error: new Error("Sorry! This user doesn't exist."),
         method: 'POST',
         controllerName: 'loginUser',
         action: 'check if user exists in DB'
@@ -119,7 +122,7 @@ const loginUser = async (req, res) => {
     } else {
       return handleControllerError({
         res,
-        error: new Error('the password is incorrect'),
+        error: new Error('The username/email or password is incorrect.'),
         method: 'POST',
         controllerName: 'loginUser',
         action: 'check password'
@@ -129,6 +132,7 @@ const loginUser = async (req, res) => {
     handleControllerError({
       res,
       error,
+      status: 500,
       method: 'POST',
       controllerName: 'loginUser',
       action: 'login user'
@@ -197,6 +201,7 @@ const updateUser = async (req, res) => {
     handleControllerError({
       res,
       error,
+      status: 500,
       method: 'PUT',
       controllerName: 'updateUser',
       action: 'update existing user'
@@ -234,6 +239,7 @@ const deleteUser = async (req, res) => {
     handleControllerError({
       res,
       error,
+      status: 500,
       method: 'DELETE',
       controllerName: 'deleteUser',
       action: 'delete user in DB'

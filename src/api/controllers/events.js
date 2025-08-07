@@ -20,6 +20,7 @@ const getEvents = async (req, res) => {
   } catch (error) {
     handleControllerError({
       res,
+      status: 500,
       error,
       method: 'GET',
       controllerName: 'getEvents',
@@ -49,6 +50,7 @@ const getEventById = async (req, res) => {
     handleControllerError({
       res,
       error,
+      status: 500,
       method: 'GET',
       controllerName: 'getEventById',
       action: 'fetch event with _id from DB'
@@ -71,6 +73,7 @@ const getEventsByCreator = async (req, res) => {
     handleControllerError({
       res,
       error,
+      status: 500,
       method: 'GET',
       controllerName: 'getEventsByCreator',
       action: 'fetch events with creator from DB'
@@ -94,6 +97,7 @@ const createEvent = async (req, res) => {
     handleControllerError({
       res,
       error,
+      status: 500,
       method: 'POST',
       controllerName: 'createEvent',
       action: 'upload new event to DB'
@@ -150,6 +154,7 @@ const updateEvent = async (req, res) => {
     handleControllerError({
       res,
       error,
+      status: 500,
       method: 'PUT',
       controllerName: 'updateEvent',
       action: 'update existing event'
@@ -187,6 +192,7 @@ const deleteEvent = async (req, res) => {
     handleControllerError({
       res,
       error,
+      status: 500,
       method: 'DELETE',
       controllerName: 'deleteEvent',
       action: 'delete event in DB'
